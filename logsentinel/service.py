@@ -1,4 +1,4 @@
-﻿"""Central orchestrator connecting tailer, parser, detector, tracker, and blocker."""
+"""Central orchestrator connecting tailer, parser, detector, tracker, and blocker."""
 
 import json
 import logging
@@ -16,6 +16,22 @@ from logsentinel.tracker import IPTracker
 # Enable ANSI colors on Windows 10/11 console
 if sys.platform == "win32":
     os.system("")
+    if hasattr(sys.stdout, "reconfigure"):
+        try:
+            sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+        except Exception:
+            pass
+
+
+def _safe_print(text: str, flush: bool = True):
+    """Prints text safely across Windows cp1252 and UTF-8 terminals."""
+    try:
+        print(text, flush=flush)
+    except UnicodeEncodeError:
+        encoding = sys.stdout.encoding or "ascii"
+        fallback = text.encode(encoding, errors="replace").decode(encoding, errors="replace")
+        print(fallback, flush=flush)
+
 
 # ANSI Color Codes
 CLR_RESET = "\033[0m"
@@ -168,19 +184,19 @@ class SentinelService:
   {CLR_BOLD}Whitelisted Subnets:{CLR_RESET}{', '.join(self.config.whitelist)}
 {"=" * 86}
 """
-        print(banner, flush=True)
+        _safe_print(banner, flush=True)
 
     def print_summary(self):
         elapsed = time.time() - self.start_time
-        print(f"\n{CLR_BOLD}{CLR_CYAN}{'=' * 30} LogSentinel Run Summary {'=' * 30}{CLR_RESET}")
-        print(f"  Duration:            {elapsed:.2f} seconds")
-        print(f"  Log Lines Monitored: {self.stats['lines_processed']}")
-        print(f"  Attacks Detected:    {self.stats['threats_detected']}")
-        print(f"  IPs Banned:          {len(self.tracker.banned_ips)}")
+        _safe_print(f"\n{CLR_BOLD}{CLR_CYAN}{'=' * 30} LogSentinel Run Summary {'=' * 30}{CLR_RESET}")
+        _safe_print(f"  Duration:            {elapsed:.2f} seconds")
+        _safe_print(f"  Log Lines Monitored: {self.stats['lines_processed']}")
+        _safe_print(f"  Attacks Detected:    {self.stats['threats_detected']}")
+        _safe_print(f"  IPs Banned:          {len(self.tracker.banned_ips)}")
         if self.tracker.banned_ips:
             for ip in sorted(self.tracker.banned_ips):
-                print(f"    - {CLR_RED}{ip}{CLR_RESET}")
-        print(f"{CLR_BOLD}{CLR_CYAN}{'=' * 85}{CLR_RESET}\n")
+                _safe_print(f"    - {CLR_RED}{ip}{CLR_RESET}")
+        _safe_print(f"{CLR_BOLD}{CLR_CYAN}{'=' * 85}{CLR_RESET}\n")
 
     def start(self):
         """Start the real-time monitoring loop."""
