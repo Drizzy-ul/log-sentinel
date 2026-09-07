@@ -1,0 +1,21 @@
+﻿version: '3.8'
+
+services:
+  logsentinel:
+    build: .
+    container_name: logsentinel
+    restart: unless-stopped
+    # Required for managing host iptables rules
+    cap_add:
+      - NET_ADMIN
+    network_mode: host
+    volumes:
+      # Mount host nginx/apache access logs into container
+      - /var/log/nginx:/var/log/nginx:ro
+      - ./alerts.log:/app/alerts.log
+    command: >
+      --log-file /var/log/nginx/access.log
+      --backend iptables
+      --no-dry-run
+      --threshold 3
+      --window 60

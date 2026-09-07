@@ -1,0 +1,40 @@
+﻿[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "logsentinel"
+version = "1.0.0"
+authors = [
+  { name="Kelvin Amartey Winston", email="kelvinamarteywinston@gmail.com" },
+]
+description = "Automated real-time Nginx and Apache access log intrusion detection and active firewall response daemon."
+readme = "README.md"
+requires-python = ">=3.8"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: POSIX :: Linux",
+    "Operating System :: Microsoft :: Windows",
+    "Topic :: Security",
+    "Topic :: System :: Networking :: Firewalls",
+    "Topic :: System :: Monitoring",
+]
+keywords = ["security", "ids", "firewall", "iptables", "ufw", "nginx", "apache", "waf", "log-analysis", "intrusion-detection"]
+
+[project.urls]
+"Homepage" = "https://github.com/Drizzy-ul/log-sentinel"
+"Bug Tracker" = "https://github.com/Drizzy-ul/log-sentinel/issues"
+
+[project.scripts]
+logsentinel = "main:main"
+
+[tool.setuptools.packages.find]
+include = ["logsentinel*"]

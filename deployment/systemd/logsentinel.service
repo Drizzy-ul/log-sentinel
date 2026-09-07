@@ -1,0 +1,23 @@
+﻿[Unit]
+Description=LogSentinel Active Intrusion Detection & Firewall Defense Daemon
+After=network.target nginx.service apache2.service
+Documentation=https://github.com/Drizzy-ul/log-sentinel
+
+[Service]
+Type=simple
+User=root
+WorkingDirectory=/opt/logsentinel
+ExecStart=/usr/bin/python3 /opt/logsentinel/main.py \
+    --log-file /var/log/nginx/access.log \
+    --backend iptables \
+    --threshold 3 \
+    --window 60 \
+    --no-dry-run \
+    --alert-log /var/log/logsentinel-alerts.log
+Restart=always
+RestartSec=5
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target
