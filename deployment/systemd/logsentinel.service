@@ -1,4 +1,4 @@
-﻿[Unit]
+[Unit]
 Description=LogSentinel Active Intrusion Detection & Firewall Defense Daemon
 After=network.target nginx.service apache2.service
 Documentation=https://github.com/Drizzy-ul/log-sentinel
